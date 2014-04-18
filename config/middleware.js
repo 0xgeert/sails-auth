@@ -69,9 +69,15 @@ module.exports = {
         customMiddleware: function(app) {
 
             //http://jethrokuan.github.io/2013/12/19/Using-Passport-With-Sails-JS.html
-            passport.use(new LocalStrategy(
-                function(username, password, done) {
-                    User.findByEmail(email).done(function(err, user) {
+            passport.use(new LocalStrategy({
+                    usernameField: 'email'
+                },
+                //NOTE: combi of email and provider="local" = unique.
+                function(email, password, done) {
+                    User.findOne({
+                        email: email,
+                        provider: "local"
+                    }).done(function(err, user) {
                         if (err) {
                             return done(null, err);
                         }
@@ -80,14 +86,13 @@ module.exports = {
                                 message: 'Incorrect User/Password combination'
                             });
                         }
-                        //NOTE: because username is unique there should only be 1 result found
-                        bcrypt.compare(password, user[0].password, function(err, res) {
+                        bcrypt.compare(password, user.password, function(err, res) {
                             if (!res) {
                                 return done(null, false, {
                                     message: 'Incorrect User/Password combination'
                                 });
                             }
-                            return done(null, user[0]);
+                            return done(null, user);
                         });
                     });
                 }
