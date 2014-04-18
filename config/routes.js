@@ -22,27 +22,32 @@
  *
  * This object routes static URLs to handler functions--
  * In most cases, these functions are actions inside of your controllers.
- * For convenience, you can also connect routes directly to views or external URLs.
+ * For convenience, you can also conect routes directly to views or external URLs.
  *
  */
 
 module.exports.routes = {
 
-  '/' : {
-    controller : 'home'
-  },
+    '/': {
+        controller: 'home'
+    },
 
-  '/login' : {
-    controller : 'auth',
-    action     : 'index'
-  },
+    //SHOW LOGIN PAGE
+    'get /login': "authController", //defaults to authController.index
 
-  '/logout' : {
-    controller : 'auth',
-    action     : 'logout'
-  }
+    //CALLBACK FOR LOGIN
+    //social 'posts' are done through callbacks
+    'post /login': "authController.local",
 
-  /*
+
+    //SIGNUP (GET and POST - others are 405'ed)
+    "/signup": "authController.signup",
+
+    //LOGOUT
+    'get /logout': "authController.logout",
+
+
+    /*
   // By default, your root route (aka home page) points to a view
   // located at `views/home/index.ejs`
   // 
@@ -51,11 +56,7 @@ module.exports.routes = {
     view: 'home/index'
   }
 
-  // But what if you want your home page to display
-  // a signup form located at `views/user/signup.ejs`?
-  '/': {
-    view: 'user/signup'
-  }
+  
 
 
   // Let's say you're building an email client, like Gmail
@@ -177,4 +178,3 @@ module.exports.routes = {
  * Finally, if nothing else matched, the default 404 handler is triggered.
  * See `config/404.js` to adjust your app's 404 logic.
  */
- 

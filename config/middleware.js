@@ -1,7 +1,9 @@
 var passport = require('passport'),
     GitHubStrategy = require('passport-github').Strategy,
     FacebookStrategy = require('passport-facebook').Strategy,
-    GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+    GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
+    LocalStrategy = require('passport-local').Strategy,
+    bcrypt = require('bcrypt');
 
 
 var verifyHandler = function(token, tokenSecret, profile, done) {
@@ -43,14 +45,15 @@ var verifyHandler = function(token, tokenSecret, profile, done) {
 };
 
 passport.serializeUser(function(user, done) {
-    done(null, user.uid);
+    done(null, user.id);
 });
 
-passport.deserializeUser(function(uid, done) {
+passport.deserializeUser(function(id, done) {
+
     User.findOne({
-        uid: uid
+        id: id
     }).done(function(err, user) {
-        done(err, user)
+        done(err, user);
     });
 });
 
@@ -60,6 +63,31 @@ module.exports = {
     // Init custom express middleware
     express: {
         customMiddleware: function(app) {
+
+            //http://jethrokuan.github.io/2013/12/19/Using-Passport-With-Sails-JS.html
+            passport.use(new LocalStrategy(
+                function(username, password, done) {
+                    User.findByUsername(username).done(function(err, user) {
+                        if (err) {
+                            return done(null, err);
+                        }
+                        if (!user || user.length < 1) {
+                            return done(null, false, {
+                                message: 'Incorrect User'
+                            });
+                        }
+                        //NOTE: because username is unique there should only be 1 result found
+                        bcrypt.compare(password, user[0].password, function(err, res) {
+                            if (!res) {
+                                return done(null, false, {
+                                    message: 'Invalid Password'
+                                });
+                            }
+                            return done(null, user[0]);
+                        });
+                    });
+                }
+            ));
 
             passport.use(new GitHubStrategy({
                     clientID: "YOUR_CLIENT_ID",
