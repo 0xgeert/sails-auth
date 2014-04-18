@@ -19,14 +19,22 @@
         <span style="color: red" ><%- req.flash('message') %></span>
 
         <form action="/signup" method="POST">
+            
             <p>
-                <label for="username">Username:</label>
-                <input id="username" type="text" name="username"/>
+                <label for="email">Email:</label>
+                <input id="email" type="text" name="email"/>
             </p>
+
             <p>
                 <label for="password">Password:</label>
                 <input id="password" type="password" name="password"/>
             </p>
+
+            <p>
+                <label for="displayname">Display Name:</label>
+                <input id="displayname" type="text" name="displayname"/>
+            </p>
+
             <p>
                 <input type="submit" value="Sign Up"/>
             </p>

@@ -34,10 +34,13 @@ module.exports = {
         // redirects on success.
         else if (req.method === "POST") {
 
+            req.body = req.body || {};
+            req.body.provider = "local";
+
             User.create(req.body).exec(function(err, result) {
                 if (err) {
                     console.log("ERROR");
-                    console.log(err);
+                    console.log(JSON.stringify(err));
                     req.flash('message', err.err);
                     return res.redirect('/signup');
                 }

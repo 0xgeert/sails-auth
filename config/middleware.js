@@ -21,9 +21,10 @@ var verifyHandler = function(token, tokenSecret, profile, done) {
             } else {
 
                 var data = {
+                    rawprofile: profile,
                     provider: profile.provider,
                     uid: profile.id,
-                    name: profile.displayName
+                    displayname: profile.displayName
                 };
 
                 if (profile.emails && profile.emails[0] && profile.emails[0].value) {
@@ -31,6 +32,9 @@ var verifyHandler = function(token, tokenSecret, profile, done) {
                 }
                 if (profile.name && profile.name.givenName) {
                     data.fistname = profile.name.givenName;
+
+                    //default displayname to firstname
+                    data.displayname = data.displayname || data.fistname;
                 }
                 if (profile.name && profile.name.familyName) {
                     data.lastname = profile.name.familyName;
@@ -67,20 +71,20 @@ module.exports = {
             //http://jethrokuan.github.io/2013/12/19/Using-Passport-With-Sails-JS.html
             passport.use(new LocalStrategy(
                 function(username, password, done) {
-                    User.findByUsername(username).done(function(err, user) {
+                    User.findByEmail(email).done(function(err, user) {
                         if (err) {
                             return done(null, err);
                         }
                         if (!user || user.length < 1) {
                             return done(null, false, {
-                                message: 'Incorrect User'
+                                message: 'Incorrect User/Password combination'
                             });
                         }
                         //NOTE: because username is unique there should only be 1 result found
                         bcrypt.compare(password, user[0].password, function(err, res) {
                             if (!res) {
                                 return done(null, false, {
-                                    message: 'Invalid Password'
+                                    message: 'Incorrect User/Password combination'
                                 });
                             }
                             return done(null, user[0]);
