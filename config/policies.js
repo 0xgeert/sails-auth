@@ -24,8 +24,10 @@ module.exports.policies = {
         //'create': true,
     },
 
-
-
+    //TODO: See: https://github.com/ichabodcole/Sails.js_ChatApp_v0.9.3/blob/backbone-modular/api/policies/MessagesPolicy.js
+    // for a policy that also adds in req.body.userid = req.session.user.id; for each CUD method
+    // This would be an easy way to avoid users wanting to ask info from other user.
+    // From there, we can do Role-base access etc.
 
 
     /*
