@@ -1,4 +1,4 @@
-/**
+/*
  * Policies are simply Express middleware functions which run before your controllers.
  * You can apply one or more policies for a given controller or action.
  *
@@ -14,14 +14,18 @@ module.exports.policies = {
 
     // Default policy for all controllers and actions
     // (`true` allows public access) 
-    '*': 'authenticated',
 
-    'auth': {
-        '*': true
+    '*': "authenticated",
+
+    'authController': {
+        '*': "alreadyAuth",
+        "logout": "authenticated",
     },
 
-    'user': {
-        //'create': true,
+    //with rest: true enabled on user we can post to /user which will automatically bind to 'create'
+    //This is allowed without authentication
+    'userController': {
+        'create': true
     },
 
     //TODO: See: https://github.com/ichabodcole/Sails.js_ChatApp_v0.9.3/blob/backbone-modular/api/policies/MessagesPolicy.js

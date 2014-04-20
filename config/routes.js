@@ -47,6 +47,8 @@ module.exports.routes = {
     'get /logout': "authController.logout",
 
 
+    'get /user/me': "userController.me",
+
     /*
   // By default, your root route (aka home page) points to a view
   // located at `views/home/index.ejs`

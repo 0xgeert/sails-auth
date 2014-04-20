@@ -19,12 +19,12 @@ var passport = require('passport');
 
 module.exports = {
 
-    //GET
+    //GET (login page)
     index: function(req, res) {
         res.view();
     },
 
-    //GET
+    //GET + POST
     signup: function(req, res) {
         if (req.method === "GET") {
             res.view("auth/signup");
@@ -32,6 +32,9 @@ module.exports = {
         // sign-up POST.
         // Creates a userprofile bases on username/password
         // redirects on success.
+        // 
+        // TODO: deprecate in favor of user.create
+        // which is called through ajax. Then we can redirect on client
         else if (req.method === "POST") {
 
             req.body = req.body || {};
@@ -40,7 +43,6 @@ module.exports = {
             User.create(req.body).exec(function(err, result) {
                 if (err) {
                     console.log("ERROR");
-                    console.log(JSON.stringify(err));
                     req.flash('message', err.err);
                     return res.redirect('/signup');
                 }
@@ -59,6 +61,7 @@ module.exports = {
     //GET
     logout: function(req, res) {
         req.logout();
+        req.flash('message', "Successfully logged out");
         res.redirect('/');
     },
 
@@ -144,6 +147,7 @@ module.exports = {
     },
 
 
+
     /**
      * Overrides for the settings in `config/controllers.js`
      * (specific to AuthController)
@@ -157,6 +161,13 @@ module.exports = {
     //         actions: false //don't allow ALL VERBS per controller action
     //     }
     // }
+    // 
+
+    _config: {
+        blueprints: {
+            actions: true //allow ALL verbs per controller action. We make use manually only allowed sutff is exposed.
+        }
+    }
 
 
 };

@@ -20,7 +20,7 @@ module.exports = {
     index: function (req,res)
     {
 
-        console.log(req.user);
+        // console.log(req.user);
         res.view({
             user: req.user
         });
