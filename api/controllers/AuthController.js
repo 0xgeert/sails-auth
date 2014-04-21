@@ -61,7 +61,7 @@ module.exports = {
     logout: function(req, res) {
         req.logout();
         req.flash('message', "Successfully logged out");
-        res.redirect('/');
+        res.redirect('/login');
     },
 
     //adapted from: http://jethrokuan.github.io/2013/12/19/Using-Passport-With-Sails-JS.html
