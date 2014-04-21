@@ -68,6 +68,7 @@ module.exports = {
             passport.authenticate('local', function(err, user, info) {
                 if (err || !user) {
                     if (err) {
+                        console.log(err);
                         res.send(500, err);
                     } else {
                         //!user
@@ -84,9 +85,10 @@ module.exports = {
                 }
                 req.logIn(user, function(err) {
                     if (err) {
+                        console.log(err);
                         return res.send(500, err);
                     }
-                    return res.ok();
+                    return res.send(200);
                 });
             })(req, res);
         } else {
