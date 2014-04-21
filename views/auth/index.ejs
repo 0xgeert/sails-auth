@@ -13,7 +13,7 @@
 
         <span style="color: red" ><%- req.flash('message') %></span>
 
-        <form action="/login" method="POST">
+        <div id="login">
              <p>
                 <label for="email">Email:</label>
                 <input id="email" type="text" name="email"/>
@@ -23,9 +23,9 @@
                 <input id="password" type="password" name="password"/>
             </p>
             <p>
-                <input type="submit" value="Log in"/>
+                <input type="submit" name="submit" value="Log in"/>
             </p>
-        </form>
+        </div>
         
         <div> 
             <div>Or be social: </div>
@@ -46,3 +46,6 @@
         </div>
     </div>
 </div>
+
+
+<% block('footer', "<script type='text/javascript' src='/js/pages/login.js'></script>") -%>

@@ -26,33 +26,30 @@ module.exports = {
 
     //GET + POST
     signup: function(req, res) {
+
         if (req.method === "GET") {
+
             res.view("auth/signup");
-        }
-        // sign-up POST.
-        // Creates a userprofile bases on username/password
-        // redirects on success.
-        // 
-        // TODO: deprecate in favor of user.create
-        // which is called through ajax. Then we can redirect on client
-        else if (req.method === "POST") {
+
+        } else if (req.method === "POST") {
 
             req.body = req.body || {};
             req.body.provider = "local";
 
-            User.create(req.body).exec(function(err, result) {
+            User.create(req.body).exec(function(err, user) {
                 if (err) {
-                    req.flash('message', JSON.stringify(err));
-                    return res.redirect('/signup');
+                    return res.send(err.ValidationError ? 400 : 500, err);
                 }
-                //login after signup
-                req.logIn(result, function(err) {
-                    if (err) return next(err);
-                    res.redirect('/');
+                req.logIn(user, function(err) {
+                    if (err) {
+                        return res.send(500, err);
+                    }
+                    return res.redirect('/');
                 });
             });
+
         } else {
-            res.send(405);
+            res.send(405); //Method Not Allowed
         }
     },
 
@@ -65,16 +62,30 @@ module.exports = {
     },
 
     //adapted from: http://jethrokuan.github.io/2013/12/19/Using-Passport-With-Sails-JS.html
+    //POST: login
     local: function(req, res) {
         if (req.method === "POST") {
             passport.authenticate('local', function(err, user, info) {
-                if ((err) || (!user)) {
-                    req.flash('message', info.message);
-                    res.redirect('/login');
+                if (err || !user) {
+                    if (err) {
+                        res.send(500, err);
+                    } else {
+                        //!user
+                        //
+                        //message eg: 
+                        //- Missing credentials
+                        //-Incorrect User/Password combination
+                        res.send(400, {
+                            type: "warning",
+                            msg: info.message
+                        });
+                    }
                     return;
                 }
                 req.logIn(user, function(err) {
-                    if (err) res.redirect('/login');
+                    if (err) {
+                        return res.send(500, err);
+                    }
                     return res.redirect('/');
                 });
             })(req, res);

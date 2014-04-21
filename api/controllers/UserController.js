@@ -19,7 +19,7 @@ module.exports = {
 
         User.create(req.body).exec(function(err, result) {
             if (err) {
-                return res.send(500, err);
+                return res.send(err.ValidationError ? 400 : 500, err);
             }
             return res.json(result);
         });

@@ -12,7 +12,7 @@
 
         <span style="color: red" ><%- req.flash('message') %></span>
 
-        <form action="/signup" method="POST">
+        <div id="signup">
             
             <p>
                 <label for="email">Email:</label>
@@ -30,9 +30,9 @@
             </p>
 
             <p>
-                <input type="submit" value="Sign Up"/>
+                <input name="submit" type="submit" value="Sign Up"/>
             </p>
-        </form>
+        </div>
         
         <div> 
             <div>Or be social: </div>
@@ -49,3 +49,5 @@
         </div>
     </div>
 </div>
+
+<% block('footer', "<script type='text/javascript' src='/js/pages/signup.js'></script>") -%>
