@@ -42,8 +42,7 @@ module.exports = {
 
             User.create(req.body).exec(function(err, result) {
                 if (err) {
-                    console.log("ERROR");
-                    req.flash('message', err.err);
+                    req.flash('message', JSON.stringify(err));
                     return res.redirect('/signup');
                 }
                 //login after signup
