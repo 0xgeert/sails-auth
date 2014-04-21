@@ -44,7 +44,7 @@ module.exports = {
                     if (err) {
                         return res.send(500, err);
                     }
-                    return res.redirect('/');
+                    return res.json(user);
                 });
             });
 
@@ -86,7 +86,7 @@ module.exports = {
                     if (err) {
                         return res.send(500, err);
                     }
-                    return res.redirect('/');
+                    return res.ok();
                 });
             })(req, res);
         } else {

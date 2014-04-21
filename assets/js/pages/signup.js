@@ -10,7 +10,6 @@ $("#signup input[name='submit']").click(function() {
             displayname: displayname
         },
         function(user) {
-            console.log(user);
             window.location = "/"; //success redirect
         }
     ).fail(function(res) {

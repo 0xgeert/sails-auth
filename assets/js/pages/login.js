@@ -5,7 +5,7 @@ $("#login input[name='submit']").click(function() {
     $.post(
         '/login', {
             email: email,
-            password: password,
+            password: password
         },
         function() {
             window.location = "/"; //success redirect
